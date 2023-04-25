@@ -1,24 +1,23 @@
-import helpers.UserServiceHelper;
+import api.Constants;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import poms.MainPageObject;
-import org.junit.Test;
-import org.junit.After;
 
 public class ConstructorTest {
-
     private WebDriver driver;
-    private final UserServiceHelper userServiceHelper = new UserServiceHelper();
 
     @Before
     public void setup() {
 //        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "/Users/cheredeeva/WebDriver/bin/yandexdriver");
-        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site/";
+        RestAssured.baseURI = Constants.BASE_URI;
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox");
+        options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
 //        options.setBinary("/Applications/Yandex 2.app/Contents/MacOS/Yandex");
         driver = new ChromeDriver(options);
         driver.get("https://stellarburgers.nomoreparties.site/");
@@ -30,6 +29,7 @@ public class ConstructorTest {
     }
 
     @Test
+    @DisplayName("Переход к разделу «Соусы»")
     public void saucesTest() {
         MainPageObject mainPageObject = new MainPageObject(driver);
         mainPageObject.clickSaucesButton();
@@ -37,6 +37,7 @@ public class ConstructorTest {
     }
 
     @Test
+    @DisplayName("Переход к разделу «Булки»")
     public void breadTest() {
         MainPageObject mainPageObject = new MainPageObject(driver);
         mainPageObject.clickSaucesButton();
@@ -46,6 +47,7 @@ public class ConstructorTest {
     }
 
     @Test
+    @DisplayName("Переход к разделу «Начинки»")
     public void fillingsTest() {
         MainPageObject mainPageObject = new MainPageObject(driver);
         mainPageObject.clickFillingsButton();

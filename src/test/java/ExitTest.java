@@ -1,5 +1,7 @@
-import helpers.CreateUserRequestBody;
-import helpers.UserServiceHelper;
+import api.Constants;
+import api.user.StateUserService;
+import api.user.UserRequestBody;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.After;
 import org.junit.Before;
@@ -11,26 +13,23 @@ import poms.LoginPageObject;
 import poms.MainPageObject;
 import poms.ProfilePageObject;
 
-
 public class ExitTest {
-        private WebDriver driver;
-
-        private final UserServiceHelper userServiceHelper = new UserServiceHelper();
-        private CreateUserRequestBody requestBody;
+    private WebDriver driver;
+    private final StateUserService userService = new StateUserService();
 
     @Before
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
+        options.addArguments("--no-sandbox", "--headless", "--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
 
-        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site/";
-        requestBody = new CreateUserRequestBody(
+        RestAssured.baseURI = Constants.BASE_URI;
+        UserRequestBody requestBody = new UserRequestBody(
                 "chereder@yan.ru",
                 "password",
                 "User"
         );
-        userServiceHelper.createUser(requestBody);
+        userService.createUser(requestBody);
 
         driver.get("https://stellarburgers.nomoreparties.site/login");
         LoginPageObject loginPageObject = new LoginPageObject(driver);
@@ -49,12 +48,13 @@ public class ExitTest {
 
     @After
     public void tearDown() {
-        userServiceHelper.deleteUser();
+        userService.deleteUser();
         driver.quit();
     }
 
     @Test
-    public void goToConstructorTest() {
+    @DisplayName("Выход из аккаунта")
+    public void exitTest() {
         ProfilePageObject profilePageObject = new ProfilePageObject(driver);
         profilePageObject.clickExitButton();
 
